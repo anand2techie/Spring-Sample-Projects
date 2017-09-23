@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="spring-blank" default="package" basedir=".">
+
+  <!-- project settings -->
+  <property name="version" value="1.0-SNAPSHOT" />
+
+  <!-- locations -->
+  <property name="src" location="${basedir}/src/main/java" />
+  <property name="resources" location="${basedir}/src/main/resources" />
+  <property name="test.src" location="${basedir}/src/test/java" />
+  <property name="test.resources" location="${basedir}/src/test/resources" />
+  <property name="build.classes" location="${basedir}/target/classes" />
+  <property name="build.test.classes" location="${basedir}/target/test-classes" />
+  <property name="build.jar" location="${basedir}/target/spring-blank-${version}.jar" />
+  <path id="src.path">
+    <pathelement path="${src}" />
+    <pathelement path="${resources}" />
+  </path>
+  <path id="test.src.path">
+    <pathelement path="${test.src}" />
+    <pathelement path="${test.resources}" />
+  </path>
+  <path id="class.path">
+    <fileset dir="${basedir}/lib/main" includes="*.jar"/>
+  </path>
+  <path id="test.class.path">
+    <pathelement path="${build.classes}" />
+    <pathelement path="${build.test.classes}" />
+    <fileset dir="${basedir}/lib/main" includes="*.jar" />
+    <fileset dir="${basedir}/lib/test" includes="*.jar"/>
+  </path>
+
+  <!-- compile -->
+  <target name="compile" depends="prepare">
+    <javac destdir="${build.classes}" debug="on" debugLevel="lines,vars,source"
+        nowarn="off" memoryMaximumSize="128m" fork="true" >
+      <compilerarg line="" />
+      <src refid="src.path" />
+      <classpath>
+        <path refid="class.path" />
+      </classpath>
+    </javac>
+  </target>
+
+  <!-- package (jar) -->
+  <target name="package" depends="test">
+    <jar basedir="${build.classes}" destfile="${build.jar}" />
+  </target>
+
+  <!-- test -->
+  <target name="test" depends="compile,prepare-test">
+    <echo message="== Usage ==========================================="/>
+    <echo message="= single test: ant -Dtest=UnqualifiedClassName test" />
+    <echo message="= all tests  : ant test" />
+    <echo message="===================================================="/>
+
+    <javac destdir="${build.test.classes}" debug="on" debugLevel="lines,vars,source"
+        nowarn="off" memoryMaximumSize="128m" fork="true" >
+      <compilerarg line="" />
+      <src refid="test.src.path" />
+      <classpath>
+        <path refid="test.class.path" />
+      </classpath>
+    </javac>
+
+    <junit fork="yes" haltonerror="false" printsummary="on" showoutput="true">
+      <formatter type="plain" usefile="false" />
+      <classpath refid="test.class.path" />
+      <batchtest todir="${basedir}/target/junit" if="test">
+         <fileset dir="${build.test.classes}" includes="**/${test}.class" />
+      </batchtest>
+      <batchtest todir="${basedir}/target/junit" unless="test">
+         <fileset dir="${build.test.classes}" includes="**/*Test.class" />
+      </batchtest>
+    </junit>
+  </target>
+     
+  <!-- 
+    Support targets
+  -->
+  <target name="prepare">
+    <mkdir dir="${build.classes}" /> 
+    <copy todir="${build.classes}">
+      <fileset dir="${resources}"/>
+    </copy>
+  </target>
+
+  <target name="prepare-test">
+    <mkdir dir="${build.test.classes}" /> 
+    <mkdir dir="${basedir}/target/junit" /> 
+    <copy todir="${build.test.classes}">
+      <fileset dir="${test.resources}"/>
+    </copy>
+  </target>
+
+  <target name="clean" description="clean up">
+    <delete dir="${basedir}/target" />
+  </target>
+</project>
