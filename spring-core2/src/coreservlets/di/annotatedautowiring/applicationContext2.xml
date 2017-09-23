@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+  
+  <bean id="bookLibrary"
+        class="coreservlets.JavaBookLibrary"/>  
+        
+        <bean id="xxxxBean"
+        class="coreservlets.JavaBookLibrary"/> 
+        <bean id="yyyyBean"
+        class="coreservlets.JavaBookLibrary"/> 
+        <bean id="zzzzBean"
+        class="coreservlets.JavaBookLibrary"/> 
+        <bean id="aaaaBean"
+        class="coreservlets.JavaBookLibrary"/> 
+        
+        <bean id="bookReader"
+        class="coreservlets.BookReader">
+        <!-- wiring of below properties in BookReader -->
+        <property name="bookLibrary" ref="bookLibraryBean"/>
+        <property name="xxxx" ref="xxxxBean"/>
+        <property name="yyyy" ref="yyyyBean"/>
+        <property name="zzzz" ref="zzzzBean"/>
+        <property name="aaaa" ref="aaaaBean"/>
+        </bean>
+        
+          <bean id="bookReaderWithAutowiring"
+        class="coreservlets.BookReader" autowire="byName">
+       <!-- wiring of below properties in BookReader -->
+        </bean>
+        
+        
+  <context:annotation-config/>
+        
+</beans>
